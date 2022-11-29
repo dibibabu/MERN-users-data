@@ -1,13 +1,18 @@
 
 const express = require('express')
 const app = express()
+//mongodb connection
 require('./Db/conn')
+
 const User=require('./model/userSchema')
 
+app.use(express.json());
 
-//mongodb connection
+app.use(require('./router/auth'))
 
 //middleware
+
+
 
 const middleware = (req, res, next) => {
     console.log("i am the middleware");
