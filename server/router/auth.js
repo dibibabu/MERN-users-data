@@ -1,5 +1,6 @@
 const express = require('express')
 const router = express.Router()
+const bcrypt=require('bcrypt')
 
 require('../Db/conn')
 const User = require('../model/userSchema')
@@ -71,7 +72,9 @@ router.post('/login',async(req,res)=>{
     }
     const userLogin=await User.findOne({email:email})
     console.log(userLogin);
-    if (!userLogin) {
+    if (userLogin) {
+        const isMatch=await bcrypt.compare(password,userLogin.password)
+    if (!isMatch) {
        
         res.status(400).json({error:"No user found"})
         
@@ -79,6 +82,10 @@ router.post('/login',async(req,res)=>{
          res.json({"message":"Login success"})
        
     }
+    } else {
+        res.json({"message":"user does not exist"})
+    }
+    
     
    } catch (error) {
     console.log(error);
